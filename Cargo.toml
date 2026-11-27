@@ -1,0 +1,24 @@
+[package]
+name = "ntheory-rs"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+description = "Fast, zero-dependency computational number theory library in Rust inspired by sympy.ntheory, supporting u64, u128, and built-in arbitrary-precision BigUint."
+license = "MIT OR Apache-2.0"
+keywords = ["number-theory", "math", "primes", "factorization", "sympy"]
+categories = ["mathematics", "algorithms"]
+readme = "README.md"
+repository = "https://github.com/camilakkrause/ntheory-rs"
+homepage = "https://github.com/camilakkrause/ntheory-rs"
+documentation = "https://docs.rs/ntheory-rs"
+exclude = [".github/"]
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+
+[profile.bench]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
