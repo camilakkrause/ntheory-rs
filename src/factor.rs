@@ -97,7 +97,7 @@ pub fn pollard_rho_u64(n: u64) -> Option<u64> {
                 let mut zero_hit = false;
                 for _ in 0..lim {
                     y = add_mod_u64(ctx.mul(y, y), c, n);
-                    let diff = if x >= y { x - y } else { y - x };
+                    let diff = x.abs_diff(y);
                     let next_q = ctx.mul(q, diff);
                     if next_q == 0 {
                         zero_hit = true;
@@ -113,7 +113,7 @@ pub fn pollard_rho_u64(n: u64) -> Option<u64> {
         if g == n {
             loop {
                 ys = add_mod_u64(ctx.mul(ys, ys), c, n);
-                let diff = if x >= ys { x - ys } else { ys - x };
+                let diff = x.abs_diff(ys);
                 g = gcd(diff, n);
                 if g > 1 {
                     break;
@@ -201,7 +201,7 @@ pub fn pollard_rho_u128(n: u128, max_iters: usize) -> Option<u128> {
                 let mut zero_hit = false;
                 for _ in 0..lim {
                     y = add_mod_u128(ctx.mul(y, y), c, n);
-                    let diff = if x >= y { x - y } else { y - x };
+                    let diff = x.abs_diff(y);
                     let next_q = ctx.mul(q, diff);
                     if next_q == 0 {
                         zero_hit = true;
@@ -218,7 +218,7 @@ pub fn pollard_rho_u128(n: u128, max_iters: usize) -> Option<u128> {
         if g == n {
             loop {
                 ys = add_mod_u128(ctx.mul(ys, ys), c, n);
-                let diff = if x >= ys { x - ys } else { ys - x };
+                let diff = x.abs_diff(ys);
                 g = gcd_u128(diff, n);
                 if g > 1 {
                     break;

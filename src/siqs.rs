@@ -650,8 +650,8 @@ pub fn siqs_factor(n: &BigUint) -> Option<BigUint> {
         }
         if mat[r].iter().all(|&w| w == 0) {
             let mut dep = Vec::new();
-            for w in 0..row_words {
-                let mut bits = hist[r][w];
+            for (w, &word) in hist[r].iter().enumerate() {
+                let mut bits = word;
                 while bits != 0 {
                     let tz = bits.trailing_zeros() as usize;
                     dep.push((w << 6) + tz);

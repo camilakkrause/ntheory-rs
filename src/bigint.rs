@@ -225,8 +225,8 @@ impl BigUint {
         assert!(self >= other, "BigUint subtraction underflow");
         let mut out = Vec::with_capacity(self.limbs.len());
         let mut borrow = 0i128;
-        for i in 0..self.limbs.len() {
-            let a = self.limbs[i] as i128;
+        for (i, &limb) in self.limbs.iter().enumerate() {
+            let a = limb as i128;
             let b = other.limbs.get(i).copied().unwrap_or(0) as i128;
             let d = a - b - borrow;
             if d < 0 {

@@ -54,10 +54,10 @@ fn main() {
     println!("nth_prime(10^6) = {:?}", nth_prime(1_000_000));
 
     let t_f64 = Instant::now();
-    let f64 = factorint(u64::MAX - 58);
+    let fac64 = factorint(u64::MAX - 58);
     println!(
         "factorint(2^64 - 59) = {:?} ({:.3} ms)",
-        f64,
+        fac64,
         t_f64.elapsed().as_secs_f64() * 1000.0
     );
 
@@ -65,10 +65,10 @@ fn main() {
     let p = 1_000_000_000_000_037u128;
     let q = 1_000_000_000_000_091u128;
     let t_f128 = Instant::now();
-    let f128 = factorint_u128(p * q);
+    let fac128 = factorint_u128(p * q);
     println!(
         "factorint_u128(31-digit semiprime) = {:?} ({:.2} ms)",
-        f128,
+        fac128,
         t_f128.elapsed().as_secs_f64() * 1000.0
     );
     println!(

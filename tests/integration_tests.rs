@@ -46,6 +46,7 @@ fn test_exhaustive_small_moduli_orders_totients_primitive_roots() {
             max_ord = max_ord.max(k);
             group_exp = ntheory_rs::lcm(group_exp, k);
         }
+        assert_eq!(max_ord, group_exp, "max order mismatch at n={}", n);
         assert_eq!(
             reduced_totient(n),
             group_exp,
@@ -88,17 +89,18 @@ fn test_exhaustive_sqrt_mod_and_quad_residues() {
             n
         );
 
-        for a in 0..n {
+        for (a_idx, roots) in brute.iter().enumerate() {
+            let a = a_idx as u64;
             assert_eq!(
                 is_quad_residue(a, n),
-                !brute[a as usize].is_empty(),
+                !roots.is_empty(),
                 "is_quad_residue({}, {})",
                 a,
                 n
             );
             assert_eq!(
                 sqrt_mod_all(a, n),
-                Ok(brute[a as usize].clone()),
+                Ok(roots.clone()),
                 "sqrt_mod_all({}, {})",
                 a,
                 n
@@ -119,10 +121,11 @@ fn test_exhaustive_discrete_log_and_nthroot() {
                 }
                 cur = (cur * base) % n;
             }
-            for target in 0..n {
+            for (target_idx, &expected) in first_pow.iter().enumerate() {
+                let target = target_idx as u64;
                 assert_eq!(
                     discrete_log(base, target, n),
-                    Ok(first_pow[target as usize]),
+                    Ok(expected),
                     "discrete_log({}, {}, {})",
                     base,
                     target,
@@ -132,7 +135,7 @@ fn test_exhaustive_discrete_log_and_nthroot() {
         }
     }
 
-    for &p in &[2u64, 3, 5, 7, 11, 13, 17, 29, 31] {
+    for p in [2u64, 3, 5, 7, 11, 13, 17, 29, 31] {
         for r in 1u64..=8 {
             for a in 0..p {
                 let brute: Vec<u64> = (0..p).filter(|&x| pow_mod(x, r, p) == a).collect();
@@ -191,7 +194,7 @@ fn test_symbols_crt_functions_and_big() {
     for n in -20i64..=20 {
         for a in -20i64..=20 {
             let k = kronecker_symbol(a, n);
-            assert!(k == -1 || k == 0 || k == 1);
+            assert!(matches!(k, -1..=1));
             if n > 0 && n % 2 == 1 {
                 assert_eq!(k, jacobi_symbol(a, n as u64).unwrap());
             }
@@ -206,10 +209,8 @@ fn test_symbols_crt_functions_and_big() {
     assert_eq!(mertens(300), m_acc);
     assert_eq!(divisors(72).len() as u64, divisor_count(72));
     assert_eq!(divisor_sigma(12, 2), 1 + 4 + 9 + 16 + 36 + 144);
-    assert_eq!(
-        binomial_mod(1000, 300, 997),
-        Ok(binomial_mod(1000, 300, 997).unwrap())
-    );
+    assert_eq!(binomial_mod(1000, 300, 997), Ok(0));
+    assert_eq!(binomial_mod(1000, 3, 997), Ok(1));
 
     // Continued fraction reconstruction
     for den in 1..=25 {
@@ -256,7 +257,7 @@ fn test_symbols_crt_functions_and_big() {
         prod = prod.mul(&p.pow(e));
     }
     assert_eq!(prod, phi43);
-    assert_eq!(factorint(0).len(), 0);
+    assert!(factorint(0).is_empty());
     assert_eq!(
         BigUint::from_str("123_456").unwrap(),
         BigUint::from_u64(123_456)
